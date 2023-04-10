@@ -13,7 +13,7 @@ export function CoursesGrid({courses}: { courses: Course[] }) {
     return (
         <Grid>
             {courses.map((course) => (
-                <Grid.Col span={"auto"} key={course.id}>
+                <Grid.Col xs={4} md={3} key={course.id}>
                     <CourseCard course={course}/>
                 </Grid.Col>
             ))}
