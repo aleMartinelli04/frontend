@@ -2,10 +2,11 @@ import {Button} from "@mantine/core";
 import {Link, useLocation} from "@remix-run/react";
 import React from "react";
 
-export function NavbarButton({icon, text, href}: {
+export function NavbarButton({icon, text, href, onClick}: {
     icon: JSX.Element,
     text: string,
     href: string,
+    onClick: () => any
 }) {
     const path = useLocation().pathname;
     const isCurrentPage = href === '/dashboard' ? href === path : path.startsWith(href);
@@ -14,14 +15,16 @@ export function NavbarButton({icon, text, href}: {
     const variant = isCurrentPage ? 'outline' : 'subtle';
 
     return (
-        <Link to={href}>
-            <Button color={color}
-                    radius="md"
-                    variant={variant}
-                    leftIcon={icon}
-                    fullWidth>
-                {text}
-            </Button>
-        </Link>
+        <Button
+            component={Link}
+            to={href}
+            color={color}
+            radius="md"
+            variant={variant}
+            leftIcon={icon}
+            onClick={onClick}
+            fullWidth>
+            {text}
+        </Button>
     );
 }

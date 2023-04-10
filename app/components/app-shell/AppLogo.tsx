@@ -4,8 +4,8 @@ import {Link} from "@remix-run/react";
 
 export function AppLogo() {
     return (
-        <Link to={"/dashboard"}>
-            <Image src={logo} alt={"Logo"} height={60} width={60}/>
+        <Link to={"/"}>
+            <Image src={logo} alt={"Logo"} width={60}/>
         </Link>
     );
 }

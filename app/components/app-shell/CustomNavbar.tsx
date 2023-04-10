@@ -2,18 +2,18 @@ import {Navbar, Space} from "@mantine/core";
 import {NavbarButton} from "~/components/app-shell/NavbarButton";
 import {IconAbacus, IconBook, IconCalendar, IconHome, IconList} from "@tabler/icons-react";
 
-export default function CustomNavbar({opened}: { opened: boolean }) {
+export default function CustomNavbar({opened, close}: { opened: boolean, close: () => any }) {
     return (
         <Navbar width={{sm: 250}} pt={"2rem"} px={"1rem"} hiddenBreakpoint={"sm"} hidden={!opened}>
-            <NavbarButton icon={<IconHome/>} text={'Home'} href={'/dashboard'}/>
+            <NavbarButton icon={<IconHome/>} text={'Home'} href={'/dashboard'} onClick={close}/>
             <Space h={"1rem"}/>
-            <NavbarButton icon={<IconList/>} text={'Corsi'} href={'/dashboard/courses'}/>
+            <NavbarButton icon={<IconList/>} text={'Corsi'} href={'/dashboard/courses'} onClick={close}/>
             <Space h={"1rem"}/>
-            <NavbarButton icon={<IconAbacus/>} text={'Classi'} href={'/dashboard/classes'}/>
+            <NavbarButton icon={<IconAbacus/>} text={'Classi'} href={'/dashboard/classes'} onClick={close}/>
             <Space h={"1rem"}/>
-            <NavbarButton icon={<IconBook/>} text={'Studenti'} href={'/dashboard/students'}/>
+            <NavbarButton icon={<IconBook/>} text={'Studenti'} href={'/dashboard/students'} onClick={close}/>
             <Space h={"1rem"}/>
-            <NavbarButton icon={<IconCalendar/>} text={'Anni'} href={'/dashboard/years'}/>
+            <NavbarButton icon={<IconCalendar/>} text={'Anni'} href={'/dashboard/years'} onClick={close}/>
         </Navbar>
     )
 }
