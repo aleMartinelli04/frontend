@@ -4,12 +4,10 @@ import {Link} from "@remix-run/react";
 
 export function ClassCard({c}: { c: Class }) {
     return (
-        <Link to={`/dashboard/classes/${c.id}`}>
-            <Card withBorder color={"red"} py={5}>
-                <Center>
-                    <h3>{c.name}</h3>
-                </Center>
-            </Card>
-        </Link>
+        <Card withBorder color={"red"} py={5} component={Link} to={`/dashboard/classes/${c.id}`}>
+            <Center>
+                <h3>{c.name}</h3>
+            </Center>
+        </Card>
     );
 }

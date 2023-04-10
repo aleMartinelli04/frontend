@@ -13,3 +13,16 @@ export async function updateStudent(id: number, surname?: string, name?: string,
         })
     })
 }
+
+export async function updateClass(id: number, name?: string, yearId?: number) {
+    return request(`/class/${id}/update`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            year: yearId
+        })
+    })
+}
