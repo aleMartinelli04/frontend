@@ -3,7 +3,7 @@ import {json} from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
 import {Container, Space, Text} from "@mantine/core";
 import type {Course, SchoolYear} from "~/types/types";
-import {getCoursesForYear, getCurrentSchoolYear} from "~/api/api";
+import {getCoursesForYear, getCurrentSchoolYear} from "~/api/get";
 import {YearLabel} from "~/components/years/YearLabel";
 import {CoursesGrid} from "~/components/courses/CoursesGrid";
 
