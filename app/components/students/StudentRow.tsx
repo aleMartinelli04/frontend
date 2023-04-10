@@ -30,7 +30,7 @@ export function StudentRow({student, editable, deletable, withCheckbox, selected
     return (
         <>
             {editable && classes &&
-                <UpdateStudentModal opened={opened} onClose={close} classes={classes} student={student}
+                <UpdateStudentModal opened={opened} close={close} classes={classes} student={student}
                                     key={student.id + 'M'}/>}
 
             <tr key={student.id + 'R'}>

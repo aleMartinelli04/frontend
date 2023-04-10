@@ -5,9 +5,9 @@ import {useForm} from "@mantine/form";
 import {updateStudent} from "~/api/update";
 import {notify} from "~/utils/notifications";
 
-export function UpdateStudentModal({opened, onClose, student, classes}: {
+export function UpdateStudentModal({opened, close, student, classes}: {
     opened: boolean,
-    onClose: () => void,
+    close: () => void,
     student: Student,
     classes: Class[]
 }) {
@@ -15,11 +15,10 @@ export function UpdateStudentModal({opened, onClose, student, classes}: {
     const update = async ({surname, name, c}: { surname: string, name: string, c: string }) => {
         try {
             await updateStudent(student.id, surname, name, parseInt(c));
-            onClose();
+            close();
             window.location.reload();
-        } catch (e) {
-            const {message} = e as Error;
-            notify(message, 'Errore');
+        } catch (e: Error | any) {
+            notify(e.message, 'error');
         }
     }
 
@@ -43,7 +42,7 @@ export function UpdateStudentModal({opened, onClose, student, classes}: {
     });
 
     return (
-        <Modal opened={opened} onClose={onClose} centered title={"Aggiorna Studente"}>
+        <Modal opened={opened} onClose={close} centered title={"Aggiorna Studente"}>
             <Form onSubmit={form.onSubmit(update)}>
                 <TextInput
                     label={'Cognome studente'}

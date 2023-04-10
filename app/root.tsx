@@ -8,6 +8,7 @@ import {StylesPlaceholder} from "@mantine/remix";
 import file from "~/styles/main.css";
 import cookie from 'cookie';
 import Cookies from 'js-cookie';
+import {Notifications} from "@mantine/notifications";
 
 export const meta: MetaFunction = () => ({
     charset: 'utf-8',
@@ -52,8 +53,10 @@ export default function App() {
                     <Links/>
                 </head>
                 <body>
+
                 <Outlet/>
 
+                <Notifications limit={3}/>
                 <ScrollRestoration/>
                 <Scripts/>
                 <LiveReload/>
