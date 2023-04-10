@@ -6,14 +6,14 @@ import {useDisclosure} from "@mantine/hooks";
 import {deleteStudent} from "~/api/delete";
 import {notify} from "~/utils/notifications";
 
-export function StudentRow({student, editable, deletable, classes, withCheckbox, selected, setSelected}: {
+export function StudentRow({student, editable, deletable, withCheckbox, selected, classes, setSelected}: {
     student: Student,
-    editable?: boolean,
     deletable?: boolean,
-    classes?: Class[],
-    withCheckbox?: boolean,
-    selected: number[],
-    setSelected: (selected: number[]) => void,
+    editable?: boolean,
+    withCheckbox?: boolean
+    setSelected?: (selected: number[]) => void,
+    selected?: number[],
+    classes?: Class[]
 }) {
     const [opened, {open, close}] = useDisclosure(false);
 
@@ -29,11 +29,12 @@ export function StudentRow({student, editable, deletable, classes, withCheckbox,
 
     return (
         <>
-            <UpdateStudentModal opened={opened} onClose={close} classes={classes!} student={student}
-                                key={student.id + 'M'}/>
+            {editable && classes &&
+                <UpdateStudentModal opened={opened} onClose={close} classes={classes} student={student}
+                                    key={student.id + 'M'}/>}
 
             <tr key={student.id + 'R'}>
-                {withCheckbox && (
+                {withCheckbox && selected && setSelected && (
                     <td style={{width: rem(40)}}>
                         <Checkbox
                             checked={selected.includes(student.id)}

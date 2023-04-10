@@ -20,14 +20,6 @@ export function StudentsTable({students, withCheckbox, editable, deletable, clas
     const [reverseSortDirection, setReverseSortDirection] = useState(false);
     const [selected, setSelected] = useState<number[]>([]);
 
-    if (students.length === 0) {
-        return (
-            <Center>
-                <Text>La classe non ha nessuno studente</Text>
-            </Center>
-        );
-    }
-
     const setSorting = (field: sortingType) => {
         const reversed = field === sortBy ? !reverseSortDirection : false;
         setReverseSortDirection(reversed);
@@ -40,11 +32,6 @@ export function StudentsTable({students, withCheckbox, editable, deletable, clas
         setSearch(value);
         setSortedData(sortData(students, {sortBy, reversed: reverseSortDirection, search: value}));
     };
-
-    const studentRows = sortedData.map((student) => (
-        <StudentRow student={student} withCheckbox={withCheckbox} selected={selected} setSelected={setSelected}
-                    editable={editable} deletable={deletable} classes={classes} key={student.id}/>
-    ));
 
     return (
         <ScrollArea>
@@ -97,7 +84,10 @@ export function StudentsTable({students, withCheckbox, editable, deletable, clas
                 </tr>
                 </thead>
                 <tbody>
-                {studentRows}
+                {sortedData.map((student) =>
+                    <StudentRow student={student} withCheckbox={withCheckbox} editable={editable} deletable={deletable}
+                                classes={classes} selected={selected} setSelected={setSelected} key={student.id}/>
+                )}
                 </tbody>
             </Table>
         </ScrollArea>
@@ -152,7 +142,6 @@ function sortData(students: Student[], payload: {
 
     if (sortBy === "class") {
         return filterData(students, payload.search).sort((a, b) => {
-            // check if is reversed too
             if (a.class?.name! < b.class?.name!) {
                 return reversed ? 1 : -1;
             }
