@@ -5,10 +5,10 @@ import {getClass, getStudentsForClass} from "~/api/get";
 import {useLoaderData} from "@remix-run/react";
 import {Button, Container, Space, Text, UnstyledButton} from "@mantine/core";
 import {deleteClass} from "~/api/delete";
-import {StudentsTable} from "~/components/students/StudentsTable";
 import {useDisclosure} from "@mantine/hooks";
 import {UpdateClassModal} from "~/components/modals/UpdateClassModal";
 import {IconPencil} from "@tabler/icons-react";
+import {StudentsTable} from "~/components/students/StudentsTable";
 
 type LoaderData = {
     c: Class,

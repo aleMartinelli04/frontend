@@ -1,36 +1,30 @@
 import type {ChangeEvent, ReactNode} from 'react';
 import {useState} from 'react';
-import {Center, Checkbox, Group, rem, ScrollArea, Table, Text, TextInput, UnstyledButton,} from '@mantine/core';
+import {Center, Group, ScrollArea, Table, Text, TextInput, UnstyledButton,} from '@mantine/core';
 import {IconChevronDown, IconChevronUp, IconSearch, IconSelector} from '@tabler/icons-react';
-import type {Class, Student} from "~/types/types";
-import {StudentRow} from "~/components/students/StudentRow";
+import type {Student} from "~/types/types";
 
-type sortingType = "surname" | "name" | "class" | null;
+export type sortingType = "surname" | "name" | "class" | null;
 
-export function StudentsTable({students, withCheckbox, editable, deletable, classes}: {
+export function StudentsTable({students}: {
     students: Student[],
-    withCheckbox?: boolean,
-    editable?: boolean,
-    deletable?: boolean,
-    classes?: Class[]
 }) {
-    const [search, setSearch] = useState('');
-    const [sortedData, setSortedData] = useState(students);
+    const [query, setQuery] = useState('');
+    const [sortedStudents, setSortedStudents] = useState(students);
     const [sortBy, setSortBy] = useState<sortingType>(null);
-    const [reverseSortDirection, setReverseSortDirection] = useState(false);
-    const [selected, setSelected] = useState<number[]>([]);
+    const [reverse, setReverse] = useState(false);
 
     const setSorting = (field: sortingType) => {
-        const reversed = field === sortBy ? !reverseSortDirection : false;
-        setReverseSortDirection(reversed);
+        const reversed = field === sortBy ? !reverse : false;
+        setReverse(reversed);
         setSortBy(field);
-        setSortedData(sortData(students, {sortBy: field, reversed, search}));
+        setSortedStudents(sortData(students, {sortBy: field, reversed, search: query}));
     };
 
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {value} = event.currentTarget;
-        setSearch(value);
-        setSortedData(sortData(students, {sortBy, reversed: reverseSortDirection, search: value}));
+        setQuery(value);
+        setSortedStudents(sortData(students, {sortBy, reversed: reverse, search: value}));
     };
 
     return (
@@ -39,43 +33,27 @@ export function StudentsTable({students, withCheckbox, editable, deletable, clas
                 placeholder={"Ricerca per cognome, nome o classe"}
                 mb={"md"}
                 icon={<IconSearch size="0.9rem" stroke={1.5}/>}
-                value={search}
+                value={query}
                 onChange={handleSearchChange}
             />
             <Table highlightOnHover>
                 <thead>
                 <tr>
-                    {withCheckbox && (
-                        <th style={{width: rem(40)}}>
-                            <Checkbox
-                                checked={selected.length === students.length}
-                                onChange={(event) => {
-                                    if (event.currentTarget.checked) {
-                                        setSelected(students.map((student) => student.id));
-                                    } else {
-                                        setSelected([]);
-                                    }
-                                }}
-                            />
-                        </th>
-                    )}
-                    {editable && <th style={{width: rem(40)}}/>}
-                    {deletable && <th style={{width: rem(40)}}/>}
                     <th>
                         Id
                     </th>
                     <Th
-                        reversed={reverseSortDirection}
+                        reversed={reverse}
                         sorted={sortBy === 'surname'}
                         onSort={() => setSorting('surname')}
                     >
                         Cognome
                     </Th>
-                    <Th reversed={reverseSortDirection} sorted={sortBy === 'name'} onSort={() => setSorting('name')}>
+                    <Th reversed={reverse} sorted={sortBy === 'name'} onSort={() => setSorting('name')}>
                         Nome
                     </Th>
                     <Th
-                        reversed={reverseSortDirection}
+                        reversed={reverse}
                         sorted={sortBy === 'class'}
                         onSort={() => setSorting('class')}
                     >
@@ -84,17 +62,21 @@ export function StudentsTable({students, withCheckbox, editable, deletable, clas
                 </tr>
                 </thead>
                 <tbody>
-                {sortedData.map((student) =>
-                    <StudentRow student={student} withCheckbox={withCheckbox} editable={editable} deletable={deletable}
-                                classes={classes} selected={selected} setSelected={setSelected} key={student.id}/>
-                )}
+                {sortedStudents.map((student) => (
+                    <tr key={student.id}>
+                        <td>{student.id}</td>
+                        <td>{student.surname}</td>
+                        <td>{student.name}</td>
+                        <td>{student.class?.name}</td>
+                    </tr>
+                ))}
                 </tbody>
             </Table>
         </ScrollArea>
     );
 }
 
-function Th({children, reversed, sorted, onSort}: {
+export function Th({children, reversed, sorted, onSort}: {
     children: ReactNode,
     reversed: boolean,
     sorted: boolean,
@@ -117,7 +99,7 @@ function Th({children, reversed, sorted, onSort}: {
     );
 }
 
-function filterData(students: Student[], search: string) {
+export function filterData(students: Student[], search: string) {
     const query = search.toLowerCase().trim();
 
     return students.filter((student) => (
@@ -127,7 +109,7 @@ function filterData(students: Student[], search: string) {
     ));
 }
 
-function sortData(students: Student[], payload: {
+export function sortData(students: Student[], payload: {
     sortBy: sortingType;
     reversed: boolean;
     search: string

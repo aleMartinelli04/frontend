@@ -5,9 +5,9 @@ import type {Class, SchoolYear, Student} from "~/types/types";
 import {getClassesForYear, getCurrentSchoolYear, getStudentsForYear} from "~/api/get";
 import {useLoaderData} from "@remix-run/react";
 import {YearLabel} from "~/components/years/YearLabel";
-import {StudentsTable} from "~/components/students/StudentsTable";
 import {CreateStudentModal} from "~/components/modals/CreateStudentModal";
 import {useDisclosure} from "@mantine/hooks";
+import {EditableStudentsTable} from "~/components/students/EditableStudentsTable";
 
 type LoaderData = {
     year: SchoolYear,
@@ -37,7 +37,7 @@ export default function StudentsPage() {
 
             <Container>
                 <YearLabel year={year} before={'Studenti'}/>
-                <StudentsTable students={students} editable deletable classes={availableClasses}/>
+                <EditableStudentsTable students={students} classes={availableClasses}/>
 
                 <Space h={"lg"}/>
 
