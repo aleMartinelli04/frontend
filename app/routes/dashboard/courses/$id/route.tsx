@@ -25,12 +25,8 @@ type Res = {
     notFoundStudents: number[],
     wrongYearStudents: number[],
     alreadyInCourseStudents: number[],
-    inscribedStudents: {
-        count: number
-    },
-    removedStudents: {
-        count: number
-    }
+    inscribedStudents: number,
+    removedStudents: number
 };
 
 export const loader: LoaderFunction = async ({params}) => {
@@ -86,10 +82,10 @@ export default function CourseIdPage() {
                 msg += `Studenti già iscritti: ${alreadyInCourseStudents.length}\n`;
             }
 
-            let title = `Studenti iscritti: ${inscribedStudents.count}`;
+            let title = `Studenti iscritti: ${inscribedStudents}`;
 
-            if (removedStudents !== undefined && removedStudents.count !== 0) {
-                title += ` - Studenti rimossi: ${removedStudents.count}`;
+            if (removedStudents !== 0) {
+                title += ` - Studenti rimossi: ${removedStudents}`;
             }
 
             setSelectedStudents(students);
