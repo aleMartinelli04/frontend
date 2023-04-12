@@ -1,20 +1,37 @@
-import {Button, Container, Space, Text, UnstyledButton} from "@mantine/core";
+import {Button, Container, Group, Space, Text, UnstyledButton} from "@mantine/core";
 import type {LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import type {Course, Student} from "~/types/types";
-import {getCourse, getStudentsForCourse} from "~/api/get";
+import {getCourse, getCurrentSchoolYear, getStudentsForCourse, getStudentsForYear} from "~/api/get";
 import {useLoaderData} from "@remix-run/react";
 import {StudentsTable} from "~/components/students/StudentsTable";
 import {deleteCourse} from "~/api/delete";
 import {useDisclosure} from "@mantine/hooks";
 import {IconPencil} from "@tabler/icons-react";
 import {UpdateCourseModal} from "~/components/modals/UpdateCourseModal";
+import {useState} from "react";
+import {SelectableStudentsTable} from "~/components/students/SelectableStudentsTable";
+import {inscribeStudents} from "~/api/inscribe";
+import {notify} from "~/utils/notifications";
 
 
 type LoaderData = {
     course: Course,
-    students: Student[]
+    students: Student[],
+    allStudents: Student[]
 }
+
+type Res = {
+    notFoundStudents: number[],
+    wrongYearStudents: number[],
+    alreadyInCourseStudents: number[],
+    inscribedStudents: {
+        count: number
+    },
+    removedStudents: {
+        count: number
+    }
+};
 
 export const loader: LoaderFunction = async ({params}) => {
     const {id} = params;
@@ -28,15 +45,62 @@ export const loader: LoaderFunction = async ({params}) => {
     const course = await getCourse(courseId);
     const students = await getStudentsForCourse(course);
 
+    const allStudents = await getStudentsForYear(await getCurrentSchoolYear());
+
     return json<LoaderData>({
         course,
-        students
+        students,
+        allStudents
     });
 }
 
 export default function CourseIdPage() {
-    const {course, students} = useLoaderData<LoaderData>();
+    const {course, students, allStudents} = useLoaderData<LoaderData>();
     const [opened, {open, close}] = useDisclosure(false);
+    const [update, setUpdate] = useState(false);
+    const [selectedStudents, setSelectedStudents] = useState<Student[]>(students);
+
+    const inscribe = async (students: Student[]) => {
+        try {
+            const res: Res = await inscribeStudents(course.id, students.map(s => s.id));
+
+            const {
+                notFoundStudents,
+                wrongYearStudents,
+                alreadyInCourseStudents,
+                inscribedStudents,
+                removedStudents
+            } = res;
+
+            let msg = '';
+
+            if (notFoundStudents.length !== 0) {
+                msg += `Studenti non trovati: ${notFoundStudents.length}\n`;
+            }
+
+            if (wrongYearStudents.length !== 0) {
+                msg += `Studenti di un anno diverso: ${wrongYearStudents.length}\n`;
+            }
+
+            if (alreadyInCourseStudents.length !== 0) {
+                msg += `Studenti già iscritti: ${alreadyInCourseStudents.length}\n`;
+            }
+
+            let title = `Studenti iscritti: ${inscribedStudents.count}`;
+
+            if (removedStudents !== undefined && removedStudents.count !== 0) {
+                title += ` - Studenti rimossi: ${removedStudents.count}`;
+            }
+
+            setSelectedStudents(students);
+            setUpdate(false);
+
+            notify(msg, title, "green");
+
+        } catch (e: Error | any) {
+            notify(e.message, 'Errore');
+        }
+    }
 
     return (
         <>
@@ -50,20 +114,35 @@ export default function CourseIdPage() {
 
                 <Space h={"lg"}/>
 
-                {students.length === 0 ? (
+                {update ? (
                     <Container>
-                        <p>Il corso non ha nessuno studente</p>
-                        <Button variant={"filled"} color={"red"} onClick={async () => {
-                            await deleteCourse(course);
-                            window.location.href = "/dashboard/courses";
-                        }}>
-                            Elimina corso
-                        </Button>
+                        <SelectableStudentsTable students={allStudents} selected={selectedStudents}
+                                                 saveChoice={inscribe}/>
                     </Container>
+                ) : selectedStudents.length === 0 ? (
+                    <>
+                        <Text>Il corso non ha nessuno studente</Text>
+                        <Group position={"center"} mt={"sm"}>
+                            <Button variant={"filled"} color={"red"} onClick={async () => {
+                                await deleteCourse(course);
+                                window.location.href = "/dashboard/courses";
+                            }}>
+                                Elimina corso
+                            </Button>
+                        </Group>
+                    </>
                 ) : (
                     <Container>
-                        <StudentsTable students={students}/>
+                        <StudentsTable students={selectedStudents}/>
                     </Container>
+                )}
+
+                {!update && (
+                    <Group position={"center"} mt={"sm"}>
+                        <Button variant={"outline"} color={"red"} onClick={() => setUpdate(true)}>
+                            Modifica Iscrizioni
+                        </Button>
+                    </Group>
                 )}
             </Container>
         </>
