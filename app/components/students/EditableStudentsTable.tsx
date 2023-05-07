@@ -80,7 +80,7 @@ function EditableTableRow({student, classes}: {
             await deleteStudent(student);
             window.location.reload();
         } catch (e: Error | any) {
-            notify(e.message, 'Errore');
+            notify(e.message, 'red', 'Errore');
         }
     }
 

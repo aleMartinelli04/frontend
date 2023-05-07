@@ -1,6 +1,6 @@
 import {Navbar, Space} from "@mantine/core";
 import {NavbarButton} from "~/components/app-shell/NavbarButton";
-import {IconAbacus, IconBook, IconCalendar, IconHome, IconList} from "@tabler/icons-react";
+import {IconAbacus, IconBook, IconCalendar, IconHome, IconList, IconSettings} from "@tabler/icons-react";
 
 export default function CustomNavbar({opened, close}: { opened: boolean, close: () => any }) {
     return (
@@ -14,6 +14,8 @@ export default function CustomNavbar({opened, close}: { opened: boolean, close: 
             <NavbarButton icon={<IconBook/>} text={'Studenti'} href={'/dashboard/students'} onClick={close}/>
             <Space h={"1rem"}/>
             <NavbarButton icon={<IconCalendar/>} text={'Anni'} href={'/dashboard/years'} onClick={close}/>
+            <Space h={"1rem"}/>
+            <NavbarButton icon={<IconSettings/>} text={'Impostazioni'} href={'/dashboard/settings'} onClick={close}/>
         </Navbar>
     )
 }

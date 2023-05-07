@@ -1,45 +1,45 @@
 import type {ChangeEvent} from 'react';
-import {useState} from 'react';
-import {Button, Checkbox, Group, rem, ScrollArea, Table, TextInput,} from '@mantine/core';
+import {useEffect, useState} from 'react';
+import {Button, Checkbox, Group, rem, ScrollArea, Table, TextInput, useMantineTheme,} from '@mantine/core';
 import {IconSearch} from '@tabler/icons-react';
 import type {Student} from "~/types/types";
 import {sortData, Th} from "~/components/students/StudentsTable";
 
 export type sortingType = "surname" | "name" | "class" | null;
 
-export function SelectableStudentsTable({students, selected, saveChoice}: {
-    students: Student[],
-    selected: Student[],
+export function SelectableStudentsTable({studentsInCourse, allStudents, saveChoice}: {
+    studentsInCourse: Student[],
+    allStudents: Student[],
     saveChoice: (students: Student[]) => void
 }) {
     const [query, setQuery] = useState('');
-    const [sortedStudents, setSortedStudents] = useState(students);
+    const [sortedStudents, setSortedStudents] = useState(allStudents);
     const [sortBy, setSortBy] = useState<sortingType>(null);
     const [reverse, setReverse] = useState(false);
-    const [selectedStudents, setSelectedStudents] = useState<Student[]>(selected);
+    const [selectedStudents, setSelectedStudents] = useState<Student[]>(studentsInCourse);
+
+    const theme = useMantineTheme();
+
+    useEffect(() => {
+        setSortedStudents(sortData(allStudents, {sortBy, reversed: reverse, search: query}));
+    }, [allStudents, sortBy, reverse, query]);
+
+    useEffect(() => {
+        setSelectedStudents(studentsInCourse);
+    }, [studentsInCourse]);
 
     const setSorting = (field: sortingType) => {
         const reversed = field === sortBy ? !reverse : false;
         setReverse(reversed);
         setSortBy(field);
-        setSortedStudents(sortData(students, {sortBy: field, reversed, search: query}));
+        setSortedStudents(sortData(allStudents, {sortBy: field, reversed, search: query}));
     };
 
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {value} = event.currentTarget;
         setQuery(value);
-        setSortedStudents(sortData(students, {sortBy, reversed: reverse, search: value}));
+        setSortedStudents(sortData(allStudents, {sortBy, reversed: reverse, search: value}));
     };
-
-    const toggleAll = () => {
-        setSelectedStudents((prev) => {
-            if (prev.length === students.length) {
-                return [];
-            }
-
-            return students;
-        });
-    }
 
     const toggleRow = (student: Student) => {
         setSelectedStudents((prev) => {
@@ -65,7 +65,6 @@ export function SelectableStudentsTable({students, selected, saveChoice}: {
                 <thead>
                 <tr>
                     <th style={{width: rem(40)}}>
-                        <Checkbox checked={selectedStudents.length === students.length} onChange={toggleAll}/>
                     </th>
                     <th>
                         Id
@@ -106,7 +105,7 @@ export function SelectableStudentsTable({students, selected, saveChoice}: {
             </Table>
 
             <Group position={"center"} mt={"lg"}>
-                <Button variant={"outline"} color={"red"} onClick={() => saveChoice(selectedStudents)}>
+                <Button variant={"outline"} color={theme.primaryColor} onClick={() => saveChoice(selectedStudents)}>
                     Conferma
                 </Button>
             </Group>

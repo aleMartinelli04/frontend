@@ -3,7 +3,7 @@ import {json} from "@remix-run/node";
 import type {Class, Student} from "~/types/types";
 import {getClass, getStudentsForClass} from "~/api/get";
 import {useLoaderData} from "@remix-run/react";
-import {Button, Container, Space, Text, UnstyledButton} from "@mantine/core";
+import {Button, Container, Space, Text, UnstyledButton, useMantineTheme} from "@mantine/core";
 import {deleteClass} from "~/api/delete";
 import {useDisclosure} from "@mantine/hooks";
 import {UpdateClassModal} from "~/components/modals/UpdateClassModal";
@@ -37,6 +37,8 @@ export default function ClassIdPage() {
     const {c, students} = useLoaderData<LoaderData>();
     const [opened, {open, close}] = useDisclosure(false);
 
+    const theme = useMantineTheme();
+
     return (
         <>
             <UpdateClassModal opened={opened} close={close} c={c}/>
@@ -52,7 +54,7 @@ export default function ClassIdPage() {
                 {students.length === 0 ? (
                     <Container>
                         <p>La classe non ha nessuno studente</p>
-                        <Button variant={"filled"} color={"red"} onClick={async () => {
+                        <Button variant={"filled"} color={theme.primaryColor} onClick={async () => {
                             await deleteClass(c);
                             window.location.href = "/dashboard/classes";
                         }}>

@@ -1,11 +1,14 @@
 import type {Class} from "~/types/types";
-import {Button, Group, Modal, Space, TextInput} from "@mantine/core";
+import {Button, Group, Modal, Space, TextInput, useMantineTheme} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {Form} from "@remix-run/react";
 import {updateClass} from "~/api/update";
 import {notify} from "~/utils/notifications";
+import {useEffect} from "react";
 
 export function UpdateClassModal({c, opened, close}: { c: Class, opened: boolean, close: () => void }) {
+    const theme = useMantineTheme();
+
     const form = useForm({
         initialValues: {
             name: c.name
@@ -25,9 +28,13 @@ export function UpdateClassModal({c, opened, close}: { c: Class, opened: boolean
             close();
             window.location.reload();
         } catch (e: Error | any) {
-            notify(e.message, 'error');
+            notify(e.message, 'red');
         }
     }
+
+    useEffect(() => {
+        form.setFieldValue('name', c.name);
+    }, [c]);
 
     return (
         <Modal opened={opened} onClose={close} title={`Modifica ${c.name}`} centered>
@@ -42,7 +49,7 @@ export function UpdateClassModal({c, opened, close}: { c: Class, opened: boolean
                 <Space h={"lg"}/>
 
                 <Group position={"right"}>
-                    <Button type={"submit"} variant={"outline"} color={"red"}>
+                    <Button type={"submit"} variant={"outline"} color={theme.primaryColor}>
                         Modifica
                     </Button>
                 </Group>

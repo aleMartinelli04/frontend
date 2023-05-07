@@ -8,7 +8,7 @@ export function ThemeToggle() {
     return (
         <Switch
             checked={colorScheme === 'dark'}
-            color={"red"}
+            color={theme.primaryColor}
             onChange={() => toggleColorScheme()}
             size="lg"
             onLabel={<IconSun color={theme.white} size="1.25rem" stroke={1.5}/>}

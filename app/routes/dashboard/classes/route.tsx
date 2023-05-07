@@ -3,7 +3,7 @@ import {json} from "@remix-run/node";
 import type {Class, SchoolYear} from "~/types/types";
 import {getClassesForYear, getCurrentSchoolYear} from "~/api/get";
 import {Outlet, useLoaderData} from "@remix-run/react";
-import {Button, Container, Group, Space} from "@mantine/core";
+import {Button, Container, Group, Space, useMantineTheme} from "@mantine/core";
 import {YearLabel} from "~/components/years/YearLabel";
 import {ClassesGrid} from "~/components/classes/ClassesGrid";
 import {CreateClassModal} from "~/components/modals/CreateClassModal";
@@ -28,6 +28,8 @@ export default function Classes() {
     const {year, classes} = useLoaderData<LoaderData>();
     const [opened, {open, close}] = useDisclosure(false);
 
+    const theme = useMantineTheme();
+
     return (
         <>
             <CreateClassModal opened={opened} close={close}/>
@@ -39,7 +41,7 @@ export default function Classes() {
                 <Space h={"lg"}/>
 
                 <Group position={"center"}>
-                    <Button variant={"outline"} color={"red"} onClick={open}>
+                    <Button variant={"outline"} color={theme.primaryColor} onClick={open}>
                         Crea classe
                     </Button>
                 </Group>

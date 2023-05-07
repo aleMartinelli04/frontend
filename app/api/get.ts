@@ -36,3 +36,7 @@ export async function getStudentsForClass(c: Class): Promise<Student[]> {
 export async function getClass(id: number): Promise<Class> {
     return request(`/class/${id}`);
 }
+
+export async function getPastRecap(): Promise<SchoolYear[]> {
+    return request('/past-recap');
+}
