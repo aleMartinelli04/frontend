@@ -1,9 +1,11 @@
 import {createClass} from "~/api/create";
 import {useForm} from "@mantine/form";
-import {Button, Container, Group, Modal, Space, TextInput} from "@mantine/core";
+import {Button, Container, Group, Modal, Space, TextInput, useMantineTheme} from "@mantine/core";
 import {Form} from "@remix-run/react";
 
 export function CreateClassModal({opened, close}: { opened: boolean, close: () => any }) {
+    const theme = useMantineTheme();
+
     const create = async ({name}: { name: string }) => {
         const course = await createClass(name);
         close();
@@ -40,7 +42,7 @@ export function CreateClassModal({opened, close}: { opened: boolean, close: () =
                     <Space h={"lg"}/>
 
                     <Group position={"right"}>
-                        <Button variant={"outline"} color={"red"} type={"submit"}>
+                        <Button variant={"outline"} color={theme.primaryColor} type={"submit"}>
                             Crea
                         </Button>
                     </Group>

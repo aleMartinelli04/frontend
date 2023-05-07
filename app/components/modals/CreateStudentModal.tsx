@@ -1,4 +1,4 @@
-import {Button, Container, Group, Modal, Select, Space, TextInput} from "@mantine/core";
+import {Button, Container, Group, Modal, Select, Space, TextInput, useMantineTheme} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import type {Class} from "~/types/types";
 import {Form} from "@remix-run/react";
@@ -10,6 +10,8 @@ export function CreateStudentModal({opened, onClose, classes}: {
     onClose: () => void,
     classes: Class[]
 }) {
+    const theme = useMantineTheme();
+
     const form = useForm({
         initialValues: {
             name: '',
@@ -36,7 +38,7 @@ export function CreateStudentModal({opened, onClose, classes}: {
             window.location.reload();
         } catch (e) {
             const {message} = e as Error;
-            notify(message, 'Errore');
+            notify(message, 'red', 'Errore');
         }
     };
 
@@ -71,7 +73,7 @@ export function CreateStudentModal({opened, onClose, classes}: {
                     <Space h={"lg"}/>
 
                     <Group position={"right"}>
-                        <Button variant={"outline"} color={"red"} type={"submit"}>
+                        <Button variant={"outline"} color={theme.primaryColor} type={"submit"}>
                             Crea
                         </Button>
                     </Group>

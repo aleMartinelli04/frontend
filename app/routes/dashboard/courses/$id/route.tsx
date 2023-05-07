@@ -1,4 +1,4 @@
-import {Button, Container, Group, Space, Text, UnstyledButton} from "@mantine/core";
+import {Button, Container, Group, Space, Text, UnstyledButton, useMantineTheme} from "@mantine/core";
 import type {LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import type {Course, Student} from "~/types/types";
@@ -9,7 +9,7 @@ import {deleteCourse} from "~/api/delete";
 import {useDisclosure} from "@mantine/hooks";
 import {IconPencil} from "@tabler/icons-react";
 import {UpdateCourseModal} from "~/components/modals/UpdateCourseModal";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {SelectableStudentsTable} from "~/components/students/SelectableStudentsTable";
 import {inscribeStudents} from "~/api/inscribe";
 import {notify} from "~/utils/notifications";
@@ -34,14 +34,20 @@ export const loader: LoaderFunction = async ({params}) => {
 
     const courseId = parseInt(id as string);
 
+    console.log("cid", courseId);
+
     if (isNaN(courseId)) {
         throw new Error("Id del corso invalido");
     }
 
     const course = await getCourse(courseId);
+    console.log("c", course);
     const students = await getStudentsForCourse(course);
+    console.log("sa", students);
 
     const allStudents = await getStudentsForYear(await getCurrentSchoolYear());
+
+    console.log("ss", allStudents);
 
     return json<LoaderData>({
         course,
@@ -55,6 +61,8 @@ export default function CourseIdPage() {
     const [opened, {open, close}] = useDisclosure(false);
     const [update, setUpdate] = useState(false);
     const [selectedStudents, setSelectedStudents] = useState<Student[]>(students);
+
+    const theme = useMantineTheme();
 
     const inscribe = async (students: Student[]) => {
         try {
@@ -91,12 +99,16 @@ export default function CourseIdPage() {
             setSelectedStudents(students);
             setUpdate(false);
 
-            notify(msg, title, "green");
+            notify(msg, 'green', title);
 
         } catch (e: Error | any) {
-            notify(e.message, 'Errore');
+            notify(e.message, 'red', 'Errore');
         }
     }
+
+    useEffect(() => {
+        setSelectedStudents(students);
+    }, [students]);
 
     return (
         <>
@@ -111,15 +123,13 @@ export default function CourseIdPage() {
                 <Space h={"lg"}/>
 
                 {update ? (
-                    <Container>
-                        <SelectableStudentsTable students={allStudents} selected={selectedStudents}
-                                                 saveChoice={inscribe}/>
-                    </Container>
+                    <SelectableStudentsTable studentsInCourse={selectedStudents} allStudents={allStudents}
+                                             saveChoice={inscribe}/>
                 ) : selectedStudents.length === 0 ? (
                     <>
                         <Text>Il corso non ha nessuno studente</Text>
                         <Group position={"center"} mt={"sm"}>
-                            <Button variant={"filled"} color={"red"} onClick={async () => {
+                            <Button variant={"filled"} color={theme.primaryColor} onClick={async () => {
                                 await deleteCourse(course);
                                 window.location.href = "/dashboard/courses";
                             }}>
@@ -128,29 +138,17 @@ export default function CourseIdPage() {
                         </Group>
                     </>
                 ) : (
-                    <Container>
-                        <StudentsTable students={selectedStudents}/>
-                    </Container>
+                    <StudentsTable students={selectedStudents}/>
                 )}
 
                 {!update && (
                     <Group position={"center"} mt={"sm"}>
-                        <Button variant={"outline"} color={"red"} onClick={() => setUpdate(true)}>
+                        <Button variant={"outline"} color={theme.primaryColor} onClick={() => setUpdate(true)}>
                             Modifica Iscrizioni
                         </Button>
                     </Group>
                 )}
             </Container>
         </>
-    )
-}
-
-export function ErrorBoundary({error}: { error: Error }) {
-    return (
-        <div>
-            <Space h={"2rem"}/>
-            <h1>Errore</h1>
-            <p>{error.message}</p>
-        </div>
     )
 }

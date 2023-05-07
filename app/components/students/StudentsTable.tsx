@@ -1,5 +1,5 @@
 import type {ChangeEvent, ReactNode} from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Center, Group, ScrollArea, Table, Text, TextInput, UnstyledButton,} from '@mantine/core';
 import {IconChevronDown, IconChevronUp, IconSearch, IconSelector} from '@tabler/icons-react';
 import type {Student} from "~/types/types";
@@ -13,6 +13,10 @@ export function StudentsTable({students}: {
     const [sortedStudents, setSortedStudents] = useState(students);
     const [sortBy, setSortBy] = useState<sortingType>(null);
     const [reverse, setReverse] = useState(false);
+
+    useEffect(() => {
+        setSortedStudents(sortData(students, {sortBy, reversed: reverse, search: query}));
+    }, [query, reverse, sortBy, students]);
 
     const setSorting = (field: sortingType) => {
         const reversed = field === sortBy ? !reverse : false;

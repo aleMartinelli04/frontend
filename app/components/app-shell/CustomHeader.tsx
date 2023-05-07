@@ -1,20 +1,12 @@
-import {Burger, Center, Container, Header, MediaQuery} from "@mantine/core";
-import {ThemeToggle} from "~/components/app-shell/ThemeToggle";
-import {AppLogo} from "~/components/app-shell/AppLogo";
+import {Burger, Container, Group, Header} from "@mantine/core";
 
 export function CustomHeader({opened, toggle}: { opened: boolean, toggle: () => any }) {
     return (
-        <Header height={90}>
-            <Container fluid h={"inherit"} px={30}>
-                <Center h={"inherit"} style={{display: "flex", justifyContent: "space-between"}}>
-                    <AppLogo/>
-                    <Center h={"inherit"} style={{display: "flex"}}>
-                        <ThemeToggle/>
-                        <MediaQuery largerThan={"sm"} styles={{display: "none"}}>
-                            <Burger opened={opened} onClick={toggle} size={"md"} ml={20}/>
-                        </MediaQuery>
-                    </Center>
-                </Center>
+        <Header height={50}>
+            <Container h={"inherit"}>
+                <Group position={"right"} h={"inherit"}>
+                    <Burger opened={opened} onClick={toggle}/>
+                </Group>
             </Container>
         </Header>
     )

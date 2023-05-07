@@ -1,9 +1,10 @@
-import {Button, Group, Modal, Select, Space, TextInput} from "@mantine/core";
+import {Button, Group, Modal, Select, Space, TextInput, useMantineTheme} from "@mantine/core";
 import {Form} from "@remix-run/react";
 import type {Class, Student} from "~/types/types";
 import {useForm} from "@mantine/form";
 import {updateStudent} from "~/api/update";
 import {notify} from "~/utils/notifications";
+import {useEffect} from "react";
 
 export function UpdateStudentModal({opened, close, student, classes}: {
     opened: boolean,
@@ -11,6 +12,7 @@ export function UpdateStudentModal({opened, close, student, classes}: {
     student: Student,
     classes: Class[]
 }) {
+    const theme = useMantineTheme();
 
     const update = async ({surname, name, c}: { surname: string, name: string, c: string }) => {
         try {
@@ -18,7 +20,7 @@ export function UpdateStudentModal({opened, close, student, classes}: {
             close();
             window.location.reload();
         } catch (e: Error | any) {
-            notify(e.message, 'error');
+            notify(e.message, 'red', 'Errore');
         }
     }
 
@@ -40,6 +42,12 @@ export function UpdateStudentModal({opened, close, student, classes}: {
             }
         }
     });
+
+    useEffect(() => {
+        form.setFieldValue('surname', student.surname);
+        form.setFieldValue('name', student.name);
+        form.setFieldValue('c', student.class_id.toString());
+    }, [student]);
 
     return (
         <Modal opened={opened} onClose={close} centered title={"Aggiorna Studente"}>
@@ -68,7 +76,7 @@ export function UpdateStudentModal({opened, close, student, classes}: {
                 <Space h={"lg"}/>
 
                 <Group position={"right"}>
-                    <Button type={"submit"} variant={"outline"} color={"red"}>Aggiorna</Button>
+                    <Button type={"submit"} variant={"outline"} color={theme.primaryColor}>Aggiorna</Button>
                 </Group>
             </Form>
         </Modal>

@@ -2,7 +2,7 @@ import type {Course, SchoolYear} from "~/types/types";
 import type {LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {getCoursesForYear, getCurrentSchoolYear} from "~/api/get";
-import {Button, Container, Group, Space} from "@mantine/core";
+import {Button, Container, Group, Space, useMantineTheme} from "@mantine/core";
 import {Outlet, useLoaderData} from "@remix-run/react";
 import {YearLabel} from "~/components/years/YearLabel";
 import {CoursesGrid} from "~/components/courses/CoursesGrid";
@@ -28,6 +28,7 @@ export default function Courses() {
     const {schoolYear, courses} = useLoaderData<LoaderData>();
     const [opened, {open, close}] = useDisclosure(false);
 
+    const theme = useMantineTheme();
 
     return (
         <>
@@ -40,7 +41,7 @@ export default function Courses() {
                 <Space h={"lg"}/>
 
                 <Group position={"center"}>
-                    <Button variant={"outline"} color={"red"} onClick={open}>
+                    <Button variant={"outline"} color={theme.primaryColor} onClick={open}>
                         Crea corso
                     </Button>
                 </Group>

@@ -1,4 +1,4 @@
-import {Button, Container, Group, Space} from "@mantine/core";
+import {Button, Container, Group, Space, useMantineTheme} from "@mantine/core";
 import type {LoaderFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import type {Class, SchoolYear, Student} from "~/types/types";
@@ -31,6 +31,8 @@ export default function StudentsPage() {
 
     const [modalCreateOpened, {open, close}] = useDisclosure(false);
 
+    const theme = useMantineTheme();
+
     return (
         <>
             <CreateStudentModal opened={modalCreateOpened} onClose={close} classes={availableClasses}/>
@@ -42,7 +44,7 @@ export default function StudentsPage() {
                 <Space h={"lg"}/>
 
                 <Group position={"center"}>
-                    <Button variant={"outline"} color={"red"} onClick={open}>
+                    <Button variant={"outline"} color={theme.primaryColor} onClick={open}>
                         Crea un nuovo studente
                     </Button>
                 </Group>

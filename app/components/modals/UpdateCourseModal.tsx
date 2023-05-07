@@ -1,11 +1,14 @@
-import {Button, Group, Modal, Space, TextInput} from "@mantine/core";
+import {Button, Group, Modal, Space, TextInput, useMantineTheme} from "@mantine/core";
 import type {Course} from "~/types/types";
 import {useForm} from "@mantine/form";
 import {notify} from "~/utils/notifications";
 import {updateCourse} from "~/api/update";
 import {Form} from "@remix-run/react";
+import {useEffect} from "react";
 
 export function UpdateCourseModal({course, opened, close}: { course: Course, opened: boolean, close: () => void }) {
+    const theme = useMantineTheme();
+
     const form = useForm({
         initialValues: {
             name: course.name
@@ -26,12 +29,16 @@ export function UpdateCourseModal({course, opened, close}: { course: Course, ope
             window.location.reload();
         } catch (e: Error | any) {
             console.error(e);
-            notify(e.message, 'Errore');
+            notify(e.message, 'red', 'Errore');
         }
     }
 
+    useEffect(() => {
+        form.setFieldValue('name', course.name);
+    }, [course]);
+
     return (
-        <Modal opened={opened} onClose={close} centered>
+        <Modal opened={opened} onClose={close} centered title={"Aggiorna Corso"}>
             <Form onSubmit={form.onSubmit(update)}>
                 <TextInput
                     label={"Nome"}
@@ -43,7 +50,7 @@ export function UpdateCourseModal({course, opened, close}: { course: Course, ope
                 <Space h={"lg"}/>
 
                 <Group position={"right"}>
-                    <Button type={"submit"} variant={"outline"} color={"red"}>
+                    <Button type={"submit"} variant={"outline"} color={theme.primaryColor}>
                         Modifica
                     </Button>
                 </Group>
