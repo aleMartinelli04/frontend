@@ -1,6 +1,7 @@
 import {CustomAppShell} from "~/components/app-shell/CustomAppShell";
 import {Outlet} from "@remix-run/react";
-import {Container, Text} from "@mantine/core";
+import {Button, Container} from "@mantine/core";
+import {createCurrentYear} from "~/api/create";
 
 export default function Route() {
     return (
@@ -11,11 +12,18 @@ export default function Route() {
 }
 
 export function ErrorBoundary({error}: { error: Error }) {
+    const createYear = async () => {
+        await createCurrentYear();
+
+        window.location.href = '/dashboard';
+    }
+
     return (
         <CustomAppShell>
-            <Container>
-                <h1>Oh no!</h1>
-                <Text>Erorre riscontrato: {error.message}</Text>
+            <Container size="xs">
+                <h1>Errore</h1>
+                {error.message}
+                <Button variant={"filled"} onClick={createYear}>Crea l'anno scolastico corrente</Button>
             </Container>
         </CustomAppShell>
     );

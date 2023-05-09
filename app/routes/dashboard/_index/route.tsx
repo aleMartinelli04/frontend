@@ -14,6 +14,7 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async () => {
     const currentSchoolYear = await getCurrentSchoolYear();
+
     const courses = await getCoursesForYear(currentSchoolYear);
 
     return json<LoaderData>({

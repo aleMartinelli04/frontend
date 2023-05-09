@@ -40,3 +40,12 @@ export async function createStudent(surname: string, name: string, classId: numb
         })
     });
 }
+
+export async function createCurrentYear() {
+    return request('/year/create-current', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}

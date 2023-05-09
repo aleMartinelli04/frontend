@@ -13,7 +13,7 @@ export function ClassesGrid({classes}: { classes: Class[] }) {
     return (
         <Grid>
             {classes.map((c) => (
-                <Grid.Col xs={4} md={3} key={c.id}>
+                <Grid.Col xs={3} md={2} key={c.id}>
                     <ClassCard c={c}/>
                 </Grid.Col>
             ))}

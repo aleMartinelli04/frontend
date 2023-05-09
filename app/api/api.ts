@@ -1,7 +1,7 @@
 import {errCodes} from "~/utils/err-codes";
 
 const BASE_URL = 'http://localhost';
-const PORT = 3000;
+const PORT = 4040;
 
 const URL_PORT = BASE_URL + ':' + PORT;
 
