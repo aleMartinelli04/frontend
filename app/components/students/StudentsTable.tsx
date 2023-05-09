@@ -4,7 +4,7 @@ import {Center, Group, ScrollArea, Table, Text, TextInput, UnstyledButton,} from
 import {IconChevronDown, IconChevronUp, IconSearch, IconSelector} from '@tabler/icons-react';
 import type {Student} from "~/types/types";
 
-export type sortingType = "surname" | "name" | "class" | null;
+export type sortingType = "surname" | "name" | "class" | "id" | null;
 
 export function StudentsTable({students}: {
     students: Student[],
@@ -43,9 +43,12 @@ export function StudentsTable({students}: {
             <Table highlightOnHover>
                 <thead>
                 <tr>
-                    <th>
+                    <Th
+                        reversed={reverse}
+                        sorted={sortBy === 'id'}
+                        onSort={() => setSorting('id')}>
                         Id
-                    </th>
+                    </Th>
                     <Th
                         reversed={reverse}
                         sorted={sortBy === 'surname'}
@@ -80,11 +83,19 @@ export function StudentsTable({students}: {
     );
 }
 
-export function Th({children, reversed, sorted, onSort}: {
+export function Th({
+                       children, reversed, sorted, onSort
+                   }: {
     children: ReactNode,
-    reversed: boolean,
-    sorted: boolean,
-    onSort: () => void
+    reversed
+        :
+        boolean,
+    sorted
+        :
+        boolean,
+    onSort
+        :
+        () => void
 }) {
     const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
     return (

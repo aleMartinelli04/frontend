@@ -3,9 +3,8 @@ import {useEffect, useState} from 'react';
 import {Button, Checkbox, Group, rem, ScrollArea, Table, TextInput, useMantineTheme,} from '@mantine/core';
 import {IconSearch} from '@tabler/icons-react';
 import type {Student} from "~/types/types";
+import type {sortingType} from "~/components/students/StudentsTable";
 import {sortData, Th} from "~/components/students/StudentsTable";
-
-export type sortingType = "surname" | "name" | "class" | null;
 
 export function SelectableStudentsTable({studentsInCourse, allStudents, saveChoice}: {
     studentsInCourse: Student[],
@@ -66,9 +65,12 @@ export function SelectableStudentsTable({studentsInCourse, allStudents, saveChoi
                 <tr>
                     <th style={{width: rem(40)}}>
                     </th>
-                    <th>
+                    <Th
+                        reversed={reverse}
+                        sorted={sortBy === 'id'}
+                        onSort={() => setSorting('id')}>
                         Id
-                    </th>
+                    </Th>
                     <Th
                         reversed={reverse}
                         sorted={sortBy === 'surname'}

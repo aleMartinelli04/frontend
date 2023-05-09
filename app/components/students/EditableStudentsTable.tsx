@@ -46,7 +46,12 @@ export function EditableStudentsTable({students, classes}: {
                 <tr>
                     <th style={{width: rem(40)}}/>
                     <th style={{width: rem(40)}}/>
-                    <th>Id</th>
+                    <Th
+                        reversed={reverse}
+                        sorted={sortBy === 'id'}
+                        onSort={() => setSorting('id')}>
+                        Id
+                    </Th>
                     <Th reversed={reverse} sorted={sortBy === 'surname'} onSort={() => setSorting('surname')}>
                         Cognome
                     </Th>
