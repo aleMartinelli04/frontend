@@ -32,7 +32,7 @@ export function StudentsTable({students}: {
     };
 
     return (
-        <ScrollArea>
+        <>
             <TextInput
                 placeholder={"Ricerca per cognome, nome o classe"}
                 mb={"md"}
@@ -40,62 +40,57 @@ export function StudentsTable({students}: {
                 value={query}
                 onChange={handleSearchChange}
             />
-            <Table highlightOnHover>
-                <thead>
-                <tr>
-                    <Th
-                        reversed={reverse}
-                        sorted={sortBy === 'id'}
-                        onSort={() => setSorting('id')}>
-                        Id
-                    </Th>
-                    <Th
-                        reversed={reverse}
-                        sorted={sortBy === 'surname'}
-                        onSort={() => setSorting('surname')}
-                    >
-                        Cognome
-                    </Th>
-                    <Th reversed={reverse} sorted={sortBy === 'name'} onSort={() => setSorting('name')}>
-                        Nome
-                    </Th>
-                    <Th
-                        reversed={reverse}
-                        sorted={sortBy === 'class'}
-                        onSort={() => setSorting('class')}
-                    >
-                        Classe
-                    </Th>
-                </tr>
-                </thead>
-                <tbody>
-                {sortedStudents.map((student) => (
-                    <tr key={student.id}>
-                        <td>{student.id}</td>
-                        <td>{student.surname}</td>
-                        <td>{student.name}</td>
-                        <td>{student.class?.name}</td>
+            <ScrollArea h={200}>
+
+                <Table highlightOnHover>
+                    <thead>
+                    <tr>
+                        <Th
+                            reversed={reverse}
+                            sorted={sortBy === 'id'}
+                            onSort={() => setSorting('id')}>
+                            Id
+                        </Th>
+                        <Th
+                            reversed={reverse}
+                            sorted={sortBy === 'surname'}
+                            onSort={() => setSorting('surname')}
+                        >
+                            Cognome
+                        </Th>
+                        <Th reversed={reverse} sorted={sortBy === 'name'} onSort={() => setSorting('name')}>
+                            Nome
+                        </Th>
+                        <Th
+                            reversed={reverse}
+                            sorted={sortBy === 'class'}
+                            onSort={() => setSorting('class')}
+                        >
+                            Classe
+                        </Th>
                     </tr>
-                ))}
-                </tbody>
-            </Table>
-        </ScrollArea>
+                    </thead>
+                    <tbody>
+                    {sortedStudents.map((student) => (
+                        <tr key={student.id}>
+                            <td>{student.id}</td>
+                            <td>{student.surname}</td>
+                            <td>{student.name}</td>
+                            <td>{student.class?.name}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </Table>
+            </ScrollArea>
+        </>
     );
 }
 
-export function Th({
-                       children, reversed, sorted, onSort
-                   }: {
+export function Th({children, reversed, sorted, onSort}: {
     children: ReactNode,
-    reversed
-        :
-        boolean,
-    sorted
-        :
-        boolean,
-    onSort
-        :
-        () => void
+    reversed: boolean,
+    sorted: boolean,
+    onSort: () => void
 }) {
     const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
     return (
